@@ -69,13 +69,14 @@ const Todo = () => {
   useEffect(() => {
     localStorage.setItem("mytodolist", JSON.stringify(items));
   }, [items]);
+
   return (
     <>
       <div className="main-div">
         <div className="child-div">
           <figure>
             <img src="./images/todo.svg" alt="todologo" />
-            <figcaption>Add Your List Here 👍</figcaption>
+            <figcaption>Add Your List Here 👍😊😍</figcaption>
           </figure>
           <div className="addItems">
             <input
@@ -84,6 +85,32 @@ const Todo = () => {
               className="form-control"
               value={inputdata}
               onChange={(event) => setInputData(event.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  if (!inputdata) {
+                    alert("plz fill the data");
+                  } else if (inputdata && toggleButton) {
+                    setItems(
+                      items.map((curElem) => {
+                        if (curElem.id === isEditItem) {
+                          return { ...curElem, name: inputdata };
+                        }
+                        return curElem;
+                      })
+                    );
+                    setInputData("");
+                    setIsEditItem(null);
+                    setToggleButton(false);
+                  } else {
+                    const myNewInputData = {
+                      id: new Date().getTime().toString(),
+                      name: inputdata,
+                    };
+                    setItems([...items, myNewInputData]);
+                    setInputData("");
+                  }
+                }
+              }}
             />
             {toggleButton ? (
               <i className="far fa-edit add-btn" onClick={addItem}></i>
@@ -120,7 +147,7 @@ const Todo = () => {
               data-sm-link-text="Remove All"
               onClick={removeAll}
             >
-              <span>CHECK LIST</span>
+              <span>Remove all</span>
             </button>
           </div>
         </div>
